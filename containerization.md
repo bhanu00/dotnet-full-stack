@@ -46,17 +46,23 @@ docker push your-account-id.dkr.ecr.your-region.amazonaws.com/your-app-name:late
 - Configure:
   ```json
   {
-    "family": "your-app-task",
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "family": "",
+    "containerDefinitions": [
+        {
+            "name": "",
+            "image": "",
+            "essential": true
+        }
+    ],
+    "volumes": [],
     "networkMode": "awsvpc",
-    "requiresCompatibilities": ["FARGATE"],
-    "cpu": "256",
-    "memory": "512",
-    "containerDefinitions": [{
-      "name": "your-app-container",
-      "image": "your-account-id.dkr.ecr.your-region.amazonaws.com/your-app-name:latest",
-      "essential": true
-    }]
-  }
+    "memory": "3 GB",
+    "cpu": "1 vCPU",
+    "executionRoleArn": "arn:aws:iam::567464490151:role/ecsTaskExecutionRole"
+}
   ```
 
 7. **Create Service**
