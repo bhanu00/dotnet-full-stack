@@ -44,8 +44,8 @@ docker push your-account-id.dkr.ecr.your-region.amazonaws.com/your-app-name:late
 - Click "Create new Task Definition"
 - Choose launch type (Fargate recommended)
 - Configure:
-  ```json
-  {
+```json
+{
     "requiresCompatibilities": [
         "FARGATE"
     ],
@@ -63,7 +63,7 @@ docker push your-account-id.dkr.ecr.your-region.amazonaws.com/your-app-name:late
     "cpu": "1 vCPU",
     "executionRoleArn": "arn:aws:iam::567464490151:role/ecsTaskExecutionRole"
 }
-  ```
+```
 
 7. **Create Service**
 - In your cluster, click "Create Service"
