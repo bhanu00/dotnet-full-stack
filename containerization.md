@@ -139,7 +139,7 @@ For monitoring your application:
 
 Need any clarification on any of these steps?
 
-## Locally
+## Locally Console APP
 
 I'll help you test your .NET console application with Docker locally before deploying to ECS. Here are the steps:
 
@@ -260,3 +260,139 @@ docker run -e "KEY=VALUE" your-app-name
 # Run with volume mounting
 docker run -v /host/path:/container/path your-app-name
 ```
+
+## Locally Web API
+I'll help you run your Web API project locally using Docker. Here are the steps:
+
+1. **Build the Docker Image**
+```bash
+docker build -t pocwebapi .
+```
+
+2. **Run the Container**
+Using port mapping for both exposed ports:
+```bash
+docker run -d -p 8080:8080 -p 8081:8081 --name pocwebapi pocwebapi
+```
+
+Alternative approaches:
+
+**Method 1: Using HTTPS port mapping** (recommended for development)
+- If still you get the error related to https (can verify in container logs - System.InvalidOperationException: Unable to configure HTTPS endpoint. No server certificate was specified, and the default developer certificate could not be found or is out of date.) then only use http URL in below command.
+```bash
+docker run -d \
+  -p 8080:8080 \
+  -p 8081:8081 \
+  -e ASPNETCORE_URLS="http://+:8080;https://+:8081" \
+  --name pocwebapi \
+  pocwebapi
+```
+
+**Method 2: Using environment variables**
+```bash
+docker run -d \
+  -p 8080:8080 \
+  -p 8081:8081 \
+  -e ASPNETCORE_ENVIRONMENT=Development \
+  --name pocwebapi \
+  pocwebapi
+```
+
+3. **Verify the Container is Running**
+```bash
+# Check container status
+docker ps
+
+# View logs
+docker logs pocwebapi
+
+# Follow logs
+docker logs -f pocwebapi
+```
+
+4. **Access the API**
+- HTTP: `http://localhost:8080/weatherforecast` (or your API endpoint)
+- HTTPS: `https://localhost:8081/weatherforecast`
+
+5. **Useful Docker Commands**
+```bash
+# Stop the container
+docker stop pocwebapi
+
+# Remove the container
+docker rm pocwebapi
+
+# Remove the image
+docker rmi pocwebapi
+
+# View container details
+docker inspect pocwebapi
+```
+
+6. **Using Docker Compose** (create a `docker-compose.yml`):
+```yaml
+version: '3.8'
+
+services:
+  webapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      - ASPNETCORE_URLS=http://+:8080;https://+:8081
+      - ASPNETCORE_ENVIRONMENT=Development
+```
+
+Then run:
+```bash
+docker-compose up -d
+```
+
+7. **Debugging**
+- If using Visual Studio:
+  - Set the startup project to "Docker"
+  - Press F5 to run in debug mode
+
+- If ports are already in use:
+```bash
+# Find processes using the ports
+netstat -ano | findstr :8080
+netstat -ano | findstr :8081
+
+# Kill the process if needed
+taskkill /PID <process_id> /F
+```
+
+8. **SSL Certificate Issues**
+If you're using HTTPS locally, you might need to trust the development certificate:
+```bash
+dotnet dev-certs https --clean
+dotnet dev-certs https --trust
+```
+
+9. **Testing the API**
+Using curl:
+```bash
+# Test HTTP endpoint
+curl http://localhost:8080/weatherforecast
+
+# Test HTTPS endpoint
+curl -k https://localhost:8081/weatherforecast
+```
+
+10. **Troubleshooting Tips**
+- Check if Docker Desktop is running
+- Verify no other services are using ports 8080/8081
+- Check container logs for errors
+- Ensure your API is configured to listen on the correct ports
+- Verify your launchSettings.json has correct profile settings
+
+Remember to:
+- Use HTTPS in production
+- Handle SSL certificates properly
+- Configure CORS if needed
+- Set appropriate environment variables
+- Monitor container health and logs
