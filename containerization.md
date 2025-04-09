@@ -61,7 +61,7 @@ docker push your-account-id.dkr.ecr.your-region.amazonaws.com/your-app-name:late
     "networkMode": "awsvpc",
     "memory": "3 GB",
     "cpu": "1 vCPU",
-    "executionRoleArn": "arn:aws:iam::567464490151:role/ecsTaskExecutionRole"
+    "executionRoleArn": "arn:aws:iam::your-account-id:role/ecsTaskExecutionRole"
 }
 ```
 
