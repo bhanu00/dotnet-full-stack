@@ -21,6 +21,7 @@ aws ecr get-login-password --region your-region | docker login --username AWS --
 ```
 
 4. **Build and Push Docker Image**
+   You can get these commands from Amazon ECR after creating an ECR repository by clicking on- View Push commands button. 
 ```bash
 # Build image
 docker build -t your-app-name .
